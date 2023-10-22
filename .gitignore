@@ -1,3 +1,4 @@
 .idea/
 /BackEnd/fastapienv
-*.__pycache__
+/BackEnd/__pycache__
+/BackEnd/app/__pycache__
