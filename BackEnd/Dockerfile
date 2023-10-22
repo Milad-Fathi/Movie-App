@@ -1,14 +1,15 @@
+
 FROM python:3.10
 
-WORKDIR /BackEnd
+WORKDIR /code
 
-COPY ./requirements.txt /BackEnd/requirements.txt
- 
-RUN pip install --no-cache-dir --upgrade -r /BackEnd/requirements.txt
- 
-COPY ./App /BackEnd/
+COPY ./requirements.txt /code/requirements.txt
 
-EXPOSE 3000
+RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
 
-CMD ["uvicorn", "App.main:app", "--host", "0.0.0.0", "--port", "3000"]
+COPY ./app /code/app
+
+# EXPOSE 3000
+
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
 
