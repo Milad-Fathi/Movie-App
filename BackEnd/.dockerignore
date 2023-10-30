@@ -1,3 +1,2 @@
 ../.idea
-/fastapienv
-__pycache__
+fastapienv/
