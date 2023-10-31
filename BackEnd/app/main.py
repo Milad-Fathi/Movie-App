@@ -8,6 +8,5 @@ app = FastAPI()
 models.Base.metadata.create_all(bind=engine)
 
 
-@app.get("/")
-async def hello_world():
-    return{"Hello": "World"}
+app.include_router(home.router)
+
