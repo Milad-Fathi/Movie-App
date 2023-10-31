@@ -44,8 +44,6 @@ class Comment(Base):
 
     id = Column(INTEGER, primary_key=True, index=True)
     message = Column(String)
-    # film_id = Column(INTEGER, ForeignKey("film.id"))
-    # person_id = Column(INTEGER, ForeignKey("person.id"))
 
 
 class Reply(Base):
@@ -90,7 +88,6 @@ class Links(Base):
     id = Column(INTEGER, primary_key=True, index=True)
     name = Column(String)
     link = Column(String, unique=True)
-    # film_id = Column(INTEGER, ForeignKey("film.id"))
 
 
 class Genre(Base):
