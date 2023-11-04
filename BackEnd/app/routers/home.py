@@ -44,4 +44,4 @@ db_dependency = Annotated[Session, Depends(get_db)]
 
 @router.get("/", status_code=status.HTTP_200_OK)
 async def read_all(db: db_dependency):
-    return db.query(Film).all()
+    return db.query(Film).limit(2).all()
