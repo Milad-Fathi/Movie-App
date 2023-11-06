@@ -8,3 +8,37 @@ services:
     volumes:
       - .:/code
     command: uvicorn app.main:app --host 0.0.0.0 --port 3000
+    depends_on:
+     - db
+    env_file:
+     - .env
+  db:
+   image: postgres
+   restart: always
+   environment:
+     - POSTGRES_USER=postgres
+     - POSTGRES_PASSWORD=${DB_PASSWORD}
+     - POSTGRES_DB=MovieAppDatabase
+   ports:
+     - '5432:5432'
+   volumes: 
+     - db:/var/lib/postgresql/data
+volumes:
+ db:
+   driver: local
+
+
+
+
+
+
+# version: "3.10"
+# services:
+#   web:
+#     image: movieapp
+#     build: .
+#     ports:
+#       - 3000:3000
+#     volumes:
+#       - .:/code
+#     command: uvicorn app.main:app --host 0.0.0.0 --port 3000

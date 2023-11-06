@@ -5,9 +5,12 @@ from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 from fastapi import APIRouter, Depends, HTTPException, Path
 from starlette import status
-from database import SessionLocal
-from models import Film
+from app.database import SessionLocal
+from app.models import Film
 
+
+# from database import SessionLocal
+# from models import Film
 
 router = APIRouter(
     prefix='/admin',
