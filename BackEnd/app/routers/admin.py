@@ -66,7 +66,7 @@ async def read_movie(db: db_dependency,
 @router.get("/readFilm/", status_code=status.HTTP_200_OK)
 async def read_movie(db: db_dependency,
                     film_title: str):
-    film_model = db.query(Film).filter(Film.title.casefold() == film_title.casefold()).first()
+    film_model = db.query(Film).filter(Film.title == film_title).first()
     if film_model is not None:
         return film_model
     raise HTTPException(status_code=404, detail="film not found")
@@ -77,7 +77,7 @@ async def read_movie(db: db_dependency,
 async def update_movie(db: db_dependency,
                        film_request: FilmRequest,
                        film_title: str):
-    film_model = db.query(Film).filter(Film.title.casefold() == film_title.casefold).first()
+    film_model = db.query(Film).filter(Film.title == film_title).first()
 
     if film_model is None:
         raise HTTPException(status_code=404, detail="film not found")
@@ -91,7 +91,21 @@ async def update_movie(db: db_dependency,
     film_model.movie_play_link = film_request.movie_play_link
     film_model.rating = film_request.rating
     film_model.title = film_request.title
+
+    db.add(film_model)
+    db.commit()
     
 
-
 #API to delete movie by its "title" 
+@router.delete("/deleteFilm/",status_code=status.HTTP_204_NO_CONTENT)
+async def delete_movie(db: db_dependency,
+                       film_title: str):
+    
+    film_model = db.query(Film).filter(Film.title == film_title).first()
+
+    if film_model is None:
+        raise HTTPException(status_code=404, detail="Todo not found")
+    
+    db.query(Film).filter(Film.title == film_title).delete()
+
+    db.commit()
