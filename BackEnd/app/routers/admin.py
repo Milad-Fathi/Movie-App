@@ -62,6 +62,16 @@ async def read_movie(db: db_dependency,
     raise HTTPException(status_code=404, detail="film not found")
 
 
+#API to read movie by its "film_id"
+@router.get("/readFilm/", status_code=status.HTTP_200_OK)
+async def read_movie(db: db_dependency,
+                    film_title: str):
+    film_model = db.query(Film).filter(Film.title.casefold() == film_title.casefold()).first()
+    if film_model is not None:
+        return film_model
+    raise HTTPException(status_code=404, detail="film not found")
+
+
 #API to update movie by its "title"  
 @router.put("/updateFilm/", status_code=status.HTTP_204_NO_CONTENT)
 async def update_movie(db: db_dependency,
