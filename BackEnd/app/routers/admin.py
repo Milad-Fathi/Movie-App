@@ -43,10 +43,20 @@ class FilmRequest(BaseModel):
     duration: int = Field(gt=0)
     
 
-
+# API to add movie to the database
 @router.post("/addFilm", status_code=status.HTTP_201_CREATED)
 async def add_movie(db:db_dependency, 
                     film_request:FilmRequest):
     film_model = Film(**film_request.model_dump())
     db.add(film_model)
     db.commit()
+
+
+#API to read movie by its "film_id" 
+@router.get("/readFilm/{film_id}", status_code=status.HTTP_200_OK)
+async def readMovie(db: db_dependency,
+                    film_id: int = Path(gt=0)):
+    film_model = db.query(Film).filter(Film.id == film_id).first()
+    if film_model is not None:
+        return film_model
+    raise HTTPException(status_code=404, detail="film not found")
