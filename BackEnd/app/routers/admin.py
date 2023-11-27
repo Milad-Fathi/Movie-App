@@ -43,7 +43,7 @@ class FilmRequest(BaseModel):
     duration: int = Field(gt=0)
     
 
-# API to add movie to the database
+# API to create movie and add it to the database
 @router.post("/addFilm", status_code=status.HTTP_201_CREATED)
 async def add_movie(db:db_dependency, 
                     film_request:FilmRequest):
@@ -54,9 +54,34 @@ async def add_movie(db:db_dependency,
 
 #API to read movie by its "film_id" 
 @router.get("/readFilm/{film_id}", status_code=status.HTTP_200_OK)
-async def readMovie(db: db_dependency,
+async def read_movie(db: db_dependency,
                     film_id: int = Path(gt=0)):
     film_model = db.query(Film).filter(Film.id == film_id).first()
     if film_model is not None:
         return film_model
     raise HTTPException(status_code=404, detail="film not found")
+
+
+#API to update movie by its "title"  
+@router.put("/updateFilm/", status_code=status.HTTP_204_NO_CONTENT)
+async def update_movie(db: db_dependency,
+                       film_request: FilmRequest,
+                       film_title: str):
+    film_model = db.query(Film).filter(Film.title.casefold() == film_title.casefold).first()
+
+    if film_model is None:
+        raise HTTPException(status_code=404, detail="film not found")
+    
+    film_model.budget = film_request.budget
+    film_model.cover = film_request.cover
+    film_model.date = film_request.date
+    film_model.description = film_request.description
+    film_model.duration = film_request.duration
+    film_model.language = film_request.language
+    film_model.movie_play_link = film_request.movie_play_link
+    film_model.rating = film_request.rating
+    film_model.title = film_request.title
+    
+
+
+#API to delete movie by its "title" 
