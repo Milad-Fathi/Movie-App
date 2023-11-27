@@ -15,7 +15,7 @@ DB_PASSWORD = os.getenv("DB_PASSWORD")
 
 
 
-SQLALCHEMY_DATABASE_URL = f"postgresql://postgres:{DB_PASSWORD}@db/MovieAppDatabase"
+SQLALCHEMY_DATABASE_URL = f"postgresql+psycopg2://postgres:{DB_PASSWORD}@pg-db/MovieAppDatabase"
 
 
 # SQLALCHEMY_DATABASE_URL = f"postgresql://postgres:{DB_PASSWORD}@localhost/MovieAppDatabase"

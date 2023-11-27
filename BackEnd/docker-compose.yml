@@ -9,11 +9,12 @@ services:
       - .:/code
     command: uvicorn app.main:app --host 0.0.0.0 --port 3000
     depends_on:
-     - db
+     - postgresql
     env_file:
      - .env
-  db:
-   image: postgres
+  postgresql:
+   container_name: pg-db
+   image: postgres:15
    restart: always
    environment:
      - POSTGRES_USER=postgres
@@ -23,6 +24,7 @@ services:
      - '5432:5432'
    volumes: 
      - db:/var/lib/postgresql/data
+ 
 volumes:
  db:
    driver: local
