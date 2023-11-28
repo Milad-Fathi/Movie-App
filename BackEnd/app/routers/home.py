@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from fastapi import APIRouter, Depends, HTTPException, Path
 from starlette import status
 from app.database import SessionLocal
-from app.models import Film
+from app.models import Film, Genre
 
 # from database import SessionLocal
 # from models import Film
@@ -50,11 +50,6 @@ async def read_all(db: db_dependency):
     return db.query(Film).limit(5).all()
 
 
-# return movies in specific genre
-# @router.get("/genre/", status_code=status.HTTP_200_OK)
-# async def read_by_genre(db: db_dependency, film_genre: str):
-    
-
 
 # return specific movie ,search by its title
 @router.get("/search/", status_code=status.HTTP_200_OK)
@@ -64,3 +59,20 @@ async def search_movie(db: db_dependency,
     if film_model is not None:
         return film_model
     raise HTTPException(status_code=404, detail="film not found")
+
+
+
+# return all genres
+@router.get("/genre", status_code=status.HTTP_200_OK)
+async def read_genre(db: db_dependency, name_genre):
+    genre_model = db.query(Genre).filter(Genre.name == name_genre)
+    if genre_model is not None:
+        return genre_model
+    raise HTTPException(status_code=404, detail="genre not found")
+
+
+## return movies in specific genre
+# @router.get("/genre/", status_code=status.HTTP_200_OK)
+# async def read_by_genre(db: db_dependency, film_genre: str):
+    
+
