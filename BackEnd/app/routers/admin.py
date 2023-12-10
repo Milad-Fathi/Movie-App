@@ -122,5 +122,5 @@ async def delete_movie(db: db_dependency,
 async def add_genre(db: db_dependency,
                     genre_request: GenreRequest):
     genre_model = Genre(**genre_request.model_dump())
-    db.add(genre_request)
+    db.add(genre_model)
     db.commit()

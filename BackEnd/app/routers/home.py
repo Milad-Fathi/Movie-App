@@ -61,20 +61,15 @@ async def search_movie(db: db_dependency,
     raise HTTPException(status_code=404, detail="film not found")
 
 
-# ***********************************************
-# not tested
-# ***********************************************
+
 # return all genres
 @router.get("/genre", status_code=status.HTTP_200_OK)
 async def read_genre(db: db_dependency, name_genre):
-    genre_model = db.query(Genre).filter(Genre.name == name_genre)
+    genre_model = db.query(Genre).filter(Genre.name == name_genre).first()
     if genre_model is not None:
         return genre_model
     raise HTTPException(status_code=404, detail="genre not found")
 
-# ***********************************************
-# not tested
-# ***********************************************
 
 
 
