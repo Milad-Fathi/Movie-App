@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from fastapi import APIRouter, Depends, HTTPException, Path
 from starlette import status
 from app.database import SessionLocal
-from app.models import Film
+from app.models import Film, Genre
 
 
 # from database import SessionLocal
@@ -42,6 +42,11 @@ class FilmRequest(BaseModel):
     language:str = Field(min_length=1)
     duration: int = Field(gt=0)
     
+
+class GenreRequest(BaseModel):
+    name : str = Field(min_length=1)
+
+
 
 # API to create movie and add it to the database
 @router.post("/addFilm", status_code=status.HTTP_201_CREATED)
@@ -108,4 +113,14 @@ async def delete_movie(db: db_dependency,
     
     db.query(Film).filter(Film.title == film_title).delete()
 
+    db.commit()
+
+
+
+# add genre
+@router.post("/addGenre", status_code=status.HTTP_201_CREATED)
+async def add_genre(db: db_dependency,
+                    genre_request: GenreRequest):
+    genre_model = Genre(**genre_request.model_dump())
+    db.add(genre_request)
     db.commit()
