@@ -37,7 +37,7 @@ class UserRequest(BaseModel):
 
 
 # creating user
-@router.post("/sign-in",status_code=status.HTTP_201_CREATED)
+@router.post("/sign-in", status_code=status.HTTP_201_CREATED)
 async def create_user(db: db_dependency,
                       create_user_request: UserRequest):
     
@@ -57,6 +57,13 @@ async def create_user(db: db_dependency,
 
 
 # read user
+@router.get("/log-in/", status_code=status.HTTP_200_OK)
+async def read_user(db: db_dependency,
+                    user_name: str):
+    user_model = db.query(Person).filter(Person.user_name == user_name).first()
+    if user_model is not None:
+        return user_model
+    raise HTTPException(status_code=404, detail="user not found")
 
 
 # read admin
