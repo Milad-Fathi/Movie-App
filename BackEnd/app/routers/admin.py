@@ -124,3 +124,12 @@ async def add_genre(db: db_dependency,
     genre_model = Genre(**genre_request.model_dump())
     db.add(genre_model)
     db.commit()
+
+
+# ****************************************************************
+
+# sign in for admin
+    
+# log in for admin
+    
+
