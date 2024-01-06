@@ -61,11 +61,12 @@ async def create_user(db: db_dependency,
 async def read_user(db: db_dependency,
                     user_name: str,
                     password: str):
-    user_model = db.query(Person).filter(Person.user_name == user_name)\
-        .filter(Person.hashed_password == bcrypt_context.hash(password)).first()
-    if user_model is not None:
+    user_model = db.query(Person).filter(Person.user_name == user_name).first()
+    if (user_model is not None ) and (bcrypt_context.verify(password, user_model.hashed_password)):
         return user_model
-    raise HTTPException(status_code=404, detail="user not found")
+    else:
+        return bcrypt_context.hash(password)
+    # raise HTTPException(status_code=404, detail="user not found")
 
 
 # read admin
