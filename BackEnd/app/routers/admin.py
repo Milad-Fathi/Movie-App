@@ -7,7 +7,7 @@ from fastapi import APIRouter, Depends, HTTPException, Path
 from starlette import status
 from app.database import SessionLocal
 from app.models import Film, Genre
-
+from app.routers.auth import get_current_user
 
 # from database import SessionLocal
 # from models import Film
@@ -27,7 +27,7 @@ def get_db():
 
 
 db_dependency = Annotated[Session, Depends(get_db)]
-# user_dependency = Annotated[dict, Depends(get_current_user)]
+user_dependency = Annotated[dict, Depends(get_current_user)]
 
 
 
@@ -50,8 +50,11 @@ class GenreRequest(BaseModel):
 
 # API to create movie and add it to the database
 @router.post("/addFilm", status_code=status.HTTP_201_CREATED)
-async def add_movie(db:db_dependency, 
+async def add_movie(admin: user_dependency,
+                    db:db_dependency, 
                     film_request:FilmRequest):
+    if admin is None:
+        raise HTTPException(status_code=401,detail='Authentication Failed')
     film_model = Film(**film_request.model_dump())
     db.add(film_model)
     db.commit()

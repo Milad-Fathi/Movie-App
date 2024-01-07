@@ -49,8 +49,8 @@ class Token(BaseModel):
 
 
 # To check if person's username and password is correct
-def authenticate_user(user_name: str, password: str, role: str , db):
-    user = db.query(Person).filter(Person.user_name == user_name).filter(Person.role == role).first()
+def authenticate_user(user_name: str, password: str, db):
+    user = db.query(Person).filter(Person.user_name == user_name).first()
     if not user:
         return False
     if not bcrypt_context.verify(password, user.hashed_password):
@@ -108,14 +108,14 @@ async def create_user(db: db_dependency,
 async def create_admin(db: db_dependency,
                       create_admin_request: PersonRequest):
     
-    create_user_model = Person(
+    create_admin_model = Person(
         email=create_admin_request.email,
         user_name=create_admin_request.user_name,
         role="admin",
         hashed_password=bcrypt_context.hash(create_admin_request.plain_text_password),
     )
 
-    db.add(create_admin_request)
+    db.add(create_admin_model)
     db.commit()
 
 
@@ -124,13 +124,13 @@ async def create_admin(db: db_dependency,
 @router.post("/token", response_model=Token)
 async def login_for_access_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
                                  db: db_dependency):
-    user = authenticate_user(form_data.username, form_data.password, form_data.role, db)
+    user = authenticate_user(form_data.username, form_data.password, db)
 
     if not user:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                             detail='Could not validate user/admin.')
     
-    token = create_access_token(user.username, user.id, user.role, timedelta(minutes=120))
+    token = create_access_token(user.user_name, user.id, user.role, timedelta(minutes=120))
 
     return {'access_token': token, 'token_type': 'bearer'}
 
