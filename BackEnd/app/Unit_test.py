@@ -9,11 +9,11 @@ client = TestClient(app)
 # testing post method ( add_movie )
 def test_add_film_admin():
     response = client.post("/admin/addFilm",json={
-        "title": "film5",
+        "title": "f9",
         "description": "string",
         "rating": 1,
-        "cover": "cover5",
-        "movie_play_link": "link5",
+        "cover": "cover9",
+        "movie_play_link": "link9",
         "date": "string",
         "budget": 1,
         "language": "string",
@@ -36,11 +36,11 @@ def test_update_film_admin():
     response = client.put("/admin/updateFilm/?film_title=f3",json={
         "title": "f3",
         "description": "string",
-        "rating": 3,
+        "rating": 4,
         "cover": "string3",
         "movie_play_link": "string3",
         "date": "string",
-        "budget": 3,
+        "budget": 10000,
         "language": "string",
         "duration": 3
     })
@@ -50,7 +50,7 @@ def test_update_film_admin():
 
 # testing delete method (delete_movie)
 def test_delete_film_admin():
-    response = client.delete("/admin/deleteFilm/?film_title=film1")
+    response = client.delete("/admin/deleteFilm/?film_title=film3")
 
     assert response.status_code == 204
 

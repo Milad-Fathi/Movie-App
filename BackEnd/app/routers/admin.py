@@ -53,12 +53,15 @@ class GenreRequest(BaseModel):
 async def add_movie(admin: user_dependency,
                     db:db_dependency, 
                     film_request:FilmRequest):
-    if admin is None:
+    
+    if (admin is None) or (admin.get('user_role') != "admin"):
         raise HTTPException(status_code=401,detail='Authentication Failed')
-    film_model = Film(**film_request.model_dump())
-    db.add(film_model)
-    db.commit()
+    elif admin.get('user_role') == "admin":
+        film_model = Film(**film_request.model_dump())
+        db.add(film_model)
+        db.commit()
 
+    # return admin
 
 #API to read movie by its "film_id" 
 @router.get("/readFilm/{film_id}", status_code=status.HTTP_200_OK)
