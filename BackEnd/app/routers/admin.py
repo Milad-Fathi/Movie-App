@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from fastapi import APIRouter, Depends, HTTPException, Path
 from starlette import status
 from app.database import SessionLocal
-from app.models import Film, Genre
+from app.models import Film, Genre, Person
 from app.routers.auth import get_current_user
 
 # from database import SessionLocal
@@ -154,7 +154,10 @@ async def add_genre(db: db_dependency,
     
 
 
-
+# read all users
+@router.get("/readAllUsers", status_code=status.HTTP_200_OK)
+async def read_all(db: db_dependency):
+    return db.query(Person).all()
 
 
 
