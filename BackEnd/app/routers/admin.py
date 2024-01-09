@@ -61,18 +61,27 @@ async def add_movie(admin: user_dependency,
         db.add(film_model)
         db.commit()
 
-    # return admin
+
 
 #API to read movie by its "film_id" 
 @router.get("/readFilm/{film_id}", status_code=status.HTTP_200_OK)
-async def read_movie(db: db_dependency,
+async def read_movie(admin: user_dependency,
+                    db: db_dependency,
                     film_id: int = Path(gt=0)):
-    film_model = db.query(Film).filter(Film.id == film_id).first()
-    if film_model is not None:
-        return film_model
-    raise HTTPException(status_code=404, detail="film not found")
+    
+    if (admin is None) or (admin.get('user_role') != "admin"):
+        raise HTTPException(status_code=401,detail='Authentication Failed')
+    elif admin.get('user_role') == "admin":
+        film_model = db.query(Film).filter(Film.id == film_id).first()
+        if film_model is not None:
+            return film_model
+        raise HTTPException(status_code=404, detail="film not found")
 
 
+
+
+
+# ********** this API is available in URL:"home/search" too,should use one of them******************************
 #API to read movie by its "film_title"
 @router.get("/readFilm/", status_code=status.HTTP_200_OK)
 async def read_movie(db: db_dependency,
@@ -85,41 +94,52 @@ async def read_movie(db: db_dependency,
 
 #API to update movie by its "title"  
 @router.put("/updateFilm/", status_code=status.HTTP_204_NO_CONTENT)
-async def update_movie(db: db_dependency,
+async def update_movie(admin: user_dependency,
+                       db: db_dependency,
                        film_request: FilmRequest,
                        film_title: str):
-    film_model = db.query(Film).filter(Film.title == film_title).first()
-
-    if film_model is None:
-        raise HTTPException(status_code=404, detail="film not found")
     
-    film_model.budget = film_request.budget
-    film_model.cover = film_request.cover
-    film_model.date = film_request.date
-    film_model.description = film_request.description
-    film_model.duration = film_request.duration
-    film_model.language = film_request.language
-    film_model.movie_play_link = film_request.movie_play_link
-    film_model.rating = film_request.rating
-    film_model.title = film_request.title
+    if (admin is None) or (admin.get('user_role') != "admin"):
+        raise HTTPException(status_code=401,detail='Authentication Failed')
+    elif admin.get('user_role') == "admin":
 
-    db.add(film_model)
-    db.commit()
-    
+        film_model = db.query(Film).filter(Film.title == film_title).first()
+
+        if film_model is None:
+            raise HTTPException(status_code=404, detail="film not found")
+        
+        film_model.budget = film_request.budget
+        film_model.cover = film_request.cover
+        film_model.date = film_request.date
+        film_model.description = film_request.description
+        film_model.duration = film_request.duration
+        film_model.language = film_request.language
+        film_model.movie_play_link = film_request.movie_play_link
+        film_model.rating = film_request.rating
+        film_model.title = film_request.title
+
+        db.add(film_model)
+        db.commit()
+        
 
 #API to delete movie by its "title" 
 @router.delete("/deleteFilm/",status_code=status.HTTP_204_NO_CONTENT)
-async def delete_movie(db: db_dependency,
+async def delete_movie(admin: user_dependency,
+                       db: db_dependency,
                        film_title: str):
     
-    film_model = db.query(Film).filter(Film.title == film_title).first()
+    if (admin is None) or (admin.get('user_role') != "admin"):
+        raise HTTPException(status_code=401,detail='Authentication Failed')
+    elif admin.get('user_role') == "admin":
+        
+        film_model = db.query(Film).filter(Film.title == film_title).first()
 
-    if film_model is None:
-        raise HTTPException(status_code=404, detail="Todo not found")
-    
-    db.query(Film).filter(Film.title == film_title).delete()
+        if film_model is None:
+            raise HTTPException(status_code=404, detail="Todo not found")
+        
+        db.query(Film).filter(Film.title == film_title).delete()
 
-    db.commit()
+        db.commit()
 
 
 
@@ -131,11 +151,31 @@ async def add_genre(db: db_dependency,
     db.add(genre_model)
     db.commit()
 
-
-# ****************************************************************
-
-# sign in for admin
-    
-# log in for admin
     
 
+
+
+
+
+
+
+
+# read admin
+    
+
+
+# updating user
+
+
+
+# updating admin
+
+
+
+
+# maybe not needed *******************************************
+    
+# deleting user
+    
+
+# deleting admin

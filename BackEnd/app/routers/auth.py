@@ -10,10 +10,12 @@ from passlib.context import CryptContext
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from jose import JWTError, jwt
 
+
 router = APIRouter(
     prefix='/auth',
     tags=['auth']
 )
+
 
 SECRET_KEY = 'MOVIEAPP'
 ALGORITHM = 'HS256'
@@ -21,8 +23,9 @@ ALGORITHM = 'HS256'
 
 bcrypt_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
 
-# "tokenUrl='auth/token'" maybe need some changes
+
 oauth2_bearer = OAuth2PasswordBearer(tokenUrl='auth/token')
+
 
 def get_db():
     db = SessionLocal()
@@ -35,17 +38,16 @@ def get_db():
 db_dependency = Annotated[Session, Depends(get_db)]
 
 
-
 class PersonRequest(BaseModel):
     user_name: str = Field(min_length=1)
     plain_text_password: str = Field(min_length=1)
     # role: str = Field(min_length=1)
     email: str = Field(min_length=1)
+
     
 class Token(BaseModel):
     access_token: str
     token_type: str
-
 
 
 # To check if person's username and password is correct
@@ -83,10 +85,6 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_bearer)]):
                             detail='Could not validate user/admin.')
 
 
-
-
-
-
 # creating user
 @router.post("/sign-up_user", status_code=status.HTTP_201_CREATED)
 async def create_user(db: db_dependency,
@@ -102,7 +100,7 @@ async def create_user(db: db_dependency,
     db.add(create_user_model)
     db.commit()
 
-# not tested*******************************************************************
+
 # creating admin
 @router.post("/sign-up_admin", status_code=status.HTTP_201_CREATED)
 async def create_admin(db: db_dependency,
@@ -119,8 +117,7 @@ async def create_admin(db: db_dependency,
     db.commit()
 
 
-
-# log in for user
+# log in for user/admin
 @router.post("/token", response_model=Token)
 async def login_for_access_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
                                  db: db_dependency):
@@ -133,38 +130,3 @@ async def login_for_access_token(form_data: Annotated[OAuth2PasswordRequestForm,
     token = create_access_token(user.user_name, user.id, user.role, timedelta(minutes=120))
 
     return {'access_token': token, 'token_type': 'bearer'}
-
-
-
-
-
-# read user
-# @router.get("/log-in/", status_code=status.HTTP_200_OK)
-# async def read_user(db: db_dependency,
-#                     user_name: str,
-#                     password: str):
-#     user_model = db.query(Person).filter(Person.user_name == user_name).first()
-#     if (user_model is not None ) and (bcrypt_context.verify(password, user_model.hashed_password)):
-#         return user_model
-#     raise HTTPException(status_code=404, detail="user not found")
-
-
-# read admin
-    
-
-
-# updating user
-
-
-
-# updating admin
-
-
-
-
-# maybe not needed *******************************************
-    
-# deleting user
-    
-
-# deleting admin
