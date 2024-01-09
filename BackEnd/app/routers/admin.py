@@ -156,10 +156,33 @@ async def add_genre(db: db_dependency,
 
 # read all users
 @router.get("/readAllUsers", status_code=status.HTTP_200_OK)
-async def read_all(db: db_dependency):
-    return db.query(Person).all()
+async def read_all( admin: user_dependency, 
+                    db: db_dependency):
+    
+    if (admin is None) or (admin.get('user_role') != "admin"):
+        raise HTTPException(status_code=401,detail='Authentication Failed')
+    elif admin.get('user_role') == "admin":
+        return db.query(Person).all()
 
 
+# delete user
+@router.delete("/deleteUser/",status_code=status.HTTP_204_NO_CONTENT)
+async def delete_movie(admin: user_dependency,
+                       db: db_dependency,
+                       user_name: str):
+    
+    if (admin is None) or (admin.get('user_role') != "admin"):
+        raise HTTPException(status_code=401,detail='Authentication Failed')
+    elif admin.get('user_role') == "admin":
+        
+        user_model = db.query(Person).filter(Person.user_name == user_name).first()
+
+        if user_model is None:
+            raise HTTPException(status_code=404, detail="Todo not found")
+        
+        db.query(Person).filter(Person.user_name == user_name).delete()
+
+        db.commit()
 
 
 
