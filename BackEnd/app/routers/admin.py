@@ -135,7 +135,7 @@ async def delete_movie(admin: user_dependency,
         film_model = db.query(Film).filter(Film.title == film_title).first()
 
         if film_model is None:
-            raise HTTPException(status_code=404, detail="Todo not found")
+            raise HTTPException(status_code=404, detail="Film not found")
         
         db.query(Film).filter(Film.title == film_title).delete()
 
@@ -178,7 +178,7 @@ async def delete_movie(admin: user_dependency,
         user_model = db.query(Person).filter(Person.user_name == user_name).first()
 
         if user_model is None:
-            raise HTTPException(status_code=404, detail="Todo not found")
+            raise HTTPException(status_code=404, detail="User not found")
         
         db.query(Person).filter(Person.user_name == user_name).delete()
 
