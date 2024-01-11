@@ -1,5 +1,4 @@
 
-
 from typing import Annotated
 from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
@@ -46,6 +45,11 @@ class FilmRequest(BaseModel):
 class GenreRequest(BaseModel):
     name : str = Field(min_length=1)
 
+# # not completed
+# class PersonRequest(BaseModel):
+#     user_name
+#     hashed_password
+#     email
 
 
 # API to create movie and add it to the database
@@ -143,18 +147,18 @@ async def delete_movie(admin: user_dependency,
 
 
 
-# add genre
-@router.post("/addGenre", status_code=status.HTTP_201_CREATED)
-async def add_genre(db: db_dependency,
-                    genre_request: GenreRequest):
-    genre_model = Genre(**genre_request.model_dump())
-    db.add(genre_model)
-    db.commit()
+# # add genre
+# @router.post("/addGenre", status_code=status.HTTP_201_CREATED)
+# async def add_genre(db: db_dependency,
+#                     genre_request: GenreRequest):
+#     genre_model = Genre(**genre_request.model_dump())
+#     db.add(genre_model)
+#     db.commit()
 
     
 
 
-# read all users
+# read all users and admins
 @router.get("/readAllUsers", status_code=status.HTTP_200_OK)
 async def read_all( admin: user_dependency, 
                     db: db_dependency):
@@ -165,7 +169,7 @@ async def read_all( admin: user_dependency,
         return db.query(Person).all()
 
 
-# delete user
+# delete user or admin (by its user_name)
 @router.delete("/deleteUser/",status_code=status.HTTP_204_NO_CONTENT)
 async def delete_movie(admin: user_dependency,
                        db: db_dependency,
@@ -186,22 +190,15 @@ async def delete_movie(admin: user_dependency,
 
 
 
-# read admin
-    
-
-
 # updating user
 
 
 
-# updating admin
-
-
-
-
-# maybe not needed *******************************************
-    
-# deleting user
-    
-
-# deleting admin
+# # updating admin(****************************not completed******************)
+# @router.put("/updateAdmin/",status_code=status.HTTP_204_NO_CONTENT)
+# async def update_admin(admin: user_dependency,
+#                        db: db_dependency,
+#                        admin_request: PersonRequest,
+#                     #    film_title: str
+#                     ):
+#     pass
