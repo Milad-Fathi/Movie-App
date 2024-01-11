@@ -160,7 +160,7 @@ async def delete_movie(admin: user_dependency,
 
 # read all users and admins
 @router.get("/readAllUsers", status_code=status.HTTP_200_OK)
-async def read_all( admin: user_dependency, 
+async def read_all_person( admin: user_dependency, 
                     db: db_dependency):
     
     if (admin is None) or (admin.get('user_role') != "admin"):
@@ -171,7 +171,7 @@ async def read_all( admin: user_dependency,
 
 # delete user or admin (by its user_name)
 @router.delete("/deleteUser/",status_code=status.HTTP_204_NO_CONTENT)
-async def delete_movie(admin: user_dependency,
+async def delete_person(admin: user_dependency,
                        db: db_dependency,
                        user_name: str):
     
