@@ -5,6 +5,7 @@ import './index.css'
 import { Routes, Route} from "react-router-dom";
 import viteLogo from '/vite.svg'
 import './App.css'
+import AdminLoginF from './components/Admin-login-formF';
 
 function App() {
   const [count, setCount] = useState(0)
