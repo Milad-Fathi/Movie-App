@@ -85,15 +85,15 @@ async def read_movie(admin: user_dependency,
 
 
 
-# ********** this API is available in URL:"home/search" too,should use one of them******************************
-#API to read movie by its "film_title"
-@router.get("/readFilm/", status_code=status.HTTP_200_OK)
-async def read_movie(db: db_dependency,
-                    film_title: str):
-    film_model = db.query(Film).filter(Film.title == film_title).first()
-    if film_model is not None:
-        return film_model
-    raise HTTPException(status_code=404, detail="film not found")
+# # ********** this API is available in URL:"home/search" too,should use one of them******************************
+# #API to read movie by its "film_title"
+# @router.get("/readFilm/", status_code=status.HTTP_200_OK)
+# async def read_movie(db: db_dependency,
+#                     film_title: str):
+#     film_model = db.query(Film).filter(Film.title == film_title).first()
+#     if film_model is not None:
+#         return film_model
+#     raise HTTPException(status_code=404, detail="film not found")
 
 
 #API to update movie by its "title"  
